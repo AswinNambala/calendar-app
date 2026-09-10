@@ -1,5 +1,6 @@
 import 'package:calendar_app/core/validators/form_validators.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -13,7 +14,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController passwordCtrl = TextEditingController();
   final TextEditingController conformPasswordCtrl = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey();
-  bool isVisible = false;
+  bool isVisible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +55,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
-                        isVisible = true;
+                        isVisible = isVisible ? false : true;
                       });
                     },
-                    icon: isVisible
+                    icon: !isVisible
                         ? Icon(Icons.visibility)
                         : Icon(Icons.visibility_off),
                   ),
@@ -77,10 +78,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
-                        isVisible = true;
+                        isVisible = isVisible ? false : true;
                       });
                     },
-                    icon: isVisible
+                    icon: !isVisible
                         ? Icon(Icons.visibility)
                         : Icon(Icons.visibility_off),
                   ),
@@ -94,10 +95,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 60),
                 ),
                 onPressed: () {},
-                child: Text('Sign Up', style: TextStyle(color: Colors.white)),
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               Row(
@@ -109,7 +120,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(width: 10),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.pushReplacement('/login');
+                    },
                     child: Text(
                       'Log In',
                       style: TextStyle(fontSize: 17, color: Colors.blue[900]),
