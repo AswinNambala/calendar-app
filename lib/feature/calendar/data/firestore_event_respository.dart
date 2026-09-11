@@ -20,8 +20,8 @@ class FirestoreEventRepository implements EventRespository {
 
     return _eventsCollection
         .where('userId', isEqualTo: userId)
-        .where('date', isGreaterThanOrEqualTo: start)
-        .where('date', isLessThan: end)
+        .where('date',  isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+        .where('date', isLessThan: Timestamp.fromDate(end))
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) {

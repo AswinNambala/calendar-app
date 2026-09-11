@@ -47,8 +47,13 @@ class DailyEventsSection extends ConsumerWidget {
               IconButton(
                 onPressed: selectedDay == null
                     ? null
-                    : () => showAddEventDialog(context, ref, forDay: selectedDay),
-                icon: const Icon(Icons.add_circle, color: Colors.white, size: 28),
+                    : () =>
+                          showAddEventDialog(context, ref, forDay: selectedDay),
+                icon: const Icon(
+                  Icons.add_circle,
+                  color: Colors.white,
+                  size: 28,
+                ),
               ),
             ],
           ),
@@ -58,47 +63,74 @@ class DailyEventsSection extends ConsumerWidget {
               loading: () => const Center(
                 child: CircularProgressIndicator(color: Colors.white),
               ),
-              error: (error, stack) => Center(
-                child: Text(
-                  'Could not load events',
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
-                ),
-              ),
+              error: (error, stack) {
+                debugPrint('eventsForMonthProvider error: $error');
+                debugPrint('$stack');
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      'Could not load events\n$error',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ),
+                );
+              },
               data: (_) {
                 if (dayEvents.isEmpty) {
                   return Center(
                     child: Text(
                       'No events for this day',
-                      style: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.6),
+                      ),
                     ),
                   );
                 }
                 return ListView.separated(
                   itemCount: dayEvents.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
+                  separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final event = dayEvents[index];
                     return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.circle, color: Colors.orange, size: 10),
+                          const Icon(
+                            Icons.circle,
+                            color: Colors.orange,
+                            size: 10,
+                          ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               event.title,
-                              style: const TextStyle(color: Colors.white, fontSize: 15),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           IconButton(
-                            onPressed: () =>
-                                ref.read(eventActionsProvider).deleteEvent(event.id),
-                            icon: const Icon(Icons.close, color: Colors.white54, size: 18),
+                            onPressed: () => ref
+                                .read(eventActionsProvider)
+                                .deleteEvent(event.id),
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.white54,
+                              size: 18,
+                            ),
                           ),
                         ],
                       ),
