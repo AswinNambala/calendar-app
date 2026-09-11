@@ -40,6 +40,8 @@ dependencies:
   firebase_auth: ^6.6.1
   google_sign_in: ^7.2.0
   flutter_riverpod: ^3.4.3
+  table_calendar: ^3.2.1
+  cloud_firestore: ^6.9.0
 
 # Configuration for flutter_launcher_icons package
 flutter_launcher_icons:
