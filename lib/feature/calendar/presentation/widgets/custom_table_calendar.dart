@@ -35,6 +35,7 @@ class CustomTableCalendar extends ConsumerWidget {
         ],
       ),
       child: TableCalendar(
+        sixWeekMonthsEnforced: true,
         focusedDay: calendarState.focusedDay,
         firstDay: DateTime.utc(1990),
         lastDay: DateTime.utc(2040),

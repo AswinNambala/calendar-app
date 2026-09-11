@@ -1,5 +1,4 @@
 import 'package:calendar_app/feature/calendar/application/calendar_provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'add_event_dialog.dart';
@@ -93,7 +92,8 @@ class DailyEventsSection extends ConsumerWidget {
                 }
                 return ListView.separated(
                   itemCount: dayEvents.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 8),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final event = dayEvents[index];
                     return Container(
@@ -114,19 +114,47 @@ class DailyEventsSection extends ConsumerWidget {
                           ),
                           const SizedBox(width: 10),
                           Expanded(
-                            child: Text(
-                              event.title,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              ),
-                              overflow: TextOverflow.ellipsis,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  event.title,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                if (event.hasReminder)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 2),
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.alarm,
+                                          size: 12,
+                                          color: Colors.orangeAccent,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          TimeOfDay.fromDateTime(
+                                            event.reminderTime!,
+                                          ).format(context),
+                                          style: const TextStyle(
+                                            color: Colors.orangeAccent,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
                           IconButton(
                             onPressed: () => ref
                                 .read(eventActionsProvider)
-                                .deleteEvent(event.id),
+                                .deleteEvent(event),
                             icon: const Icon(
                               Icons.close,
                               color: Colors.white54,

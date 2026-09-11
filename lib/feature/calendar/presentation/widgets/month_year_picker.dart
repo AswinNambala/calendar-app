@@ -26,6 +26,7 @@ Future<void> showMonthYearPickerSheet(BuildContext context, WidgetRef ref) {
                   children: [
                     Expanded(
                       child: DropdownButtonFormField<int>(
+                        isExpanded: true,
                         initialValue: selectedMonth,
                         decoration: InputDecoration(
                           labelText: 'Month',
@@ -39,10 +40,11 @@ Future<void> showMonthYearPickerSheet(BuildContext context, WidgetRef ref) {
                         },
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: DropdownButtonFormField<int>(
                         initialValue: selectedYear,
+                        isExpanded: true,
                         decoration: InputDecoration(
                           labelText: 'Year',
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),

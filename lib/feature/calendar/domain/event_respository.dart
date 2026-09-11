@@ -6,7 +6,7 @@ abstract class EventRespository {
     required DateTime month,
   });
 
-  Future<void> addEvent(EventModel event);
+  Future<String?> addEvent(EventModel event);
 
   Future<void> deleteEvent(String eventId);
 }
