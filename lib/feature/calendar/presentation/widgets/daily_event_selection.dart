@@ -1,4 +1,5 @@
 import 'package:calendar_app/feature/calendar/application/calendar_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'add_event_dialog.dart';
@@ -92,7 +93,7 @@ class DailyEventsSection extends ConsumerWidget {
                 }
                 return ListView.separated(
                   itemCount: dayEvents.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 8),
+                  separatorBuilder: (context, index) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final event = dayEvents[index];
                     return Container(
