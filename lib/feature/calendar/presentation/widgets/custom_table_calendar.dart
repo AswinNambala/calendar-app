@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CustomTableCalendar extends ConsumerWidget {
-  const CustomTableCalendar({super.key});
+  final double? availableHeight;
+
+  const CustomTableCalendar({super.key, this.availableHeight});
 
   String _monthName(int month) {
     const names = [
@@ -19,6 +21,17 @@ class CustomTableCalendar extends ConsumerWidget {
     final calendarState = ref.watch(calendarNotifierProvider);
     final notifier = ref.read(calendarNotifierProvider.notifier);
     final eventsByDay = ref.watch(eventsByDayProvider);
+
+    // Reserve space for header (~60), days-of-week row (~16), and container
+    // padding/margins (~30) — whatever is left is divided across 6 week rows.
+    const double chromeHeight = 106.0;
+    const double defaultRowHeight = 52.0;
+    double rowHeight = defaultRowHeight;
+    if (availableHeight != null) {
+      final usable = availableHeight! - chromeHeight;
+      final computed = usable / 6;
+      rowHeight = computed.clamp(34.0, defaultRowHeight);
+    }
 
     return Container(
       margin: const EdgeInsets.fromLTRB(15, 15, 15, 0),
@@ -35,6 +48,7 @@ class CustomTableCalendar extends ConsumerWidget {
         ],
       ),
       child: TableCalendar(
+        rowHeight: rowHeight,
         sixWeekMonthsEnforced: true,
         focusedDay: calendarState.focusedDay,
         firstDay: DateTime.utc(1990),

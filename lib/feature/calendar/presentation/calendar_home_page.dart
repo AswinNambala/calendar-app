@@ -33,26 +33,32 @@ class CalendarHomeScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const CustomTableCalendar(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton.icon(
-                  onPressed: () => showMonthYearPickerSheet(context, ref),
-                  icon: const Icon(Icons.calendar_month, size: 18),
-                  label: const Text('Jump to month/year'),
-                  style: TextButton.styleFrom(foregroundColor: Colors.black87),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final calendarBudget = constraints.maxHeight * 0.62;
+          return Column(
+            children: [
+               CustomTableCalendar(availableHeight: calendarBudget,),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton.icon(
+                      onPressed: () => showMonthYearPickerSheet(context, ref),
+                      icon: const Icon(Icons.calendar_month, size: 18),
+                      label: const Text('Jump to month/year'),
+                      style:
+                          TextButton.styleFrom(foregroundColor: Colors.black87),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Expanded(child: DailyEventsSection()),
-        ],
+              ),
+              const SizedBox(height: 10),
+              const Expanded(child: DailyEventsSection()),
+            ],
+          );
+        },
       ),
     );
   }
