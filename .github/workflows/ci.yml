@@ -1,0 +1,75 @@
+name: Flutter Calendar App CI/CD
+
+# Triggers pipeline on Pull Requests to main or when code is merged into main
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # -------------------------------------------------------------
+  # JOB 1: Code Quality, Linting & Unit/Widget Testing
+  # -------------------------------------------------------------
+  test_and_analyze:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # Verifies code formatting and syntax without compiling
+      - name: Run Static Analysis
+        run: flutter analyze
+
+      # Executes unit/widget tests (like your unit_test branch logic)
+      - name: Run Unit & Widget Tests
+        run: flutter test
+
+  # -------------------------------------------------------------
+  # JOB 2: Build Web Release
+  # -------------------------------------------------------------
+  build_web:
+    name: Build Web Bundle
+    needs: test_and_analyze # Only runs if tests and analysis pass!
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # Compiles Flutter app into static web files inside build/web
+      - name: Build Flutter Web Release
+        run: flutter build web --release
+
+      # Saves the build output so it can be deployed or downloaded
+      - name: Upload Web Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: build/web
