@@ -1,6 +1,5 @@
-name: Flutter Calendar App CI/CD
+name: Flutter Calendar App CI/CD (Android Only)
 
-# Triggers pipeline on Pull Requests to main or when code is merged into main
 on:
   push:
     branches: [ main ]
@@ -34,25 +33,30 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      # Verifies code formatting and syntax without compiling
       - name: Run Static Analysis
         run: flutter analyze
 
-      # Executes unit/widget tests (like your unit_test branch logic)
       - name: Run Unit & Widget Tests
         run: flutter test
 
   # -------------------------------------------------------------
-  # JOB 2: Build Web Release
+  # JOB 2: Build Android APK (Main Branch Only)
   # -------------------------------------------------------------
-  build_web:
-    name: Build Web Bundle
-    needs: test_and_analyze # Only runs if tests and analysis pass!
+  build_android:
+    name: Build Release APK
+    needs: test_and_analyze
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
 
       - name: Set up Flutter SDK
         uses: subosito/flutter-action@v2
@@ -63,13 +67,13 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      # Compiles Flutter app into static web files inside build/web
-      - name: Build Flutter Web Release
-        run: flutter build web --release
+      # Compiles the Android APK
+      - name: Build Android Release APK
+        run: flutter build apk --release --no-tree-shake-icons
 
-      # Saves the build output so it can be deployed or downloaded
-      - name: Upload Web Build Artifact
+      # Saves the generated APK file as a downloadable GitHub artifact
+      - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
-          name: web-build
-          path: build/web
+          name: calendar-app-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
